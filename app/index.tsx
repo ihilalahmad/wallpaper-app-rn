@@ -5,6 +5,7 @@ import { hp, wp } from '@/helpers/common';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { theme } from '@/constants/theme';
+import { Link } from 'expo-router';
 
 const Page = () => {
   return (
@@ -44,9 +45,11 @@ const Page = () => {
               Every pixel tells a story
             </Animated.Text>
             <Animated.View entering={FadeInDown.delay(600).springify()}>
-              <Pressable style={styles.startButton}>
-                <Text style={styles.startButtonText}>Start Exploring</Text>
-              </Pressable>
+              <Link href={'/home/'} asChild>
+                <Pressable style={styles.startButton}>
+                  <Text style={styles.startButtonText}>Start Exploring</Text>
+                </Pressable>
+              </Link>
             </Animated.View>
           </View>
         </LinearGradient>
