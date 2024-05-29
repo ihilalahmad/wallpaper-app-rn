@@ -16,6 +16,13 @@ import Categories from '@/components/Categories';
 const HomeScreen = () => {
   const [search, setSearch] = useState<string>('');
   const searchInputRef = useRef(null);
+  const [activeCategory, setActiveCategory] = useState<string>('');
+
+  const handleCategoryClick = (category: string) => {
+    setActiveCategory(category);
+  };
+
+  console.log('active category: ', activeCategory);
 
   return (
     <View style={[styles.container, { paddingTop: getPaddingTop(30) }]}>
@@ -64,7 +71,10 @@ const HomeScreen = () => {
 
         {/* categories */}
         <View style={styles.categories}>
-          <Categories />
+          <Categories
+            activeCategory={activeCategory}
+            handleCategoryClick={handleCategoryClick}
+          />
         </View>
       </ScrollView>
     </View>
