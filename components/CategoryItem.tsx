@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import { theme } from '@/constants/theme';
 import { hp, wp } from '@/helpers/common';
+import Animated, { FadeInRight } from 'react-native-reanimated';
 
 interface ICategoryItemProps {
   title: string;
@@ -21,7 +22,12 @@ const CategoryItem = (props: ICategoryItemProps) => {
     : theme.colors.white;
 
   return (
-    <View>
+    <Animated.View
+      entering={FadeInRight.delay(index * 200)
+        .duration(1000)
+        .springify()
+        .damping(14)}
+    >
       <Pressable
         onPress={() => handleCategoryClick(isActive ? '' : title)}
         style={[styles.category, { backgroundColor: categoryBackgroundColor }]}
@@ -30,7 +36,7 @@ const CategoryItem = (props: ICategoryItemProps) => {
           {title}
         </Text>
       </Pressable>
-    </View>
+    </Animated.View>
   );
 };
 const styles = StyleSheet.create({

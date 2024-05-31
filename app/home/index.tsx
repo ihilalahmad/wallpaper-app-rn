@@ -5,24 +5,62 @@ import {
   Pressable,
   ScrollView,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { getPaddingTop, hp, wp } from '@/helpers/common';
 import Categories from '@/components/Categories';
+import { apiCall } from '@/api';
+import ImageGrid from '@/components/ImageGrid';
+import { wallpapersApi } from '@/store/apis/wallpaperApis';
+import { debounce } from 'lodash';
+import { useAppDispatch, useAppSelector } from '@/hooks/ReduxHooks';
+import { useWallpaperData } from '@/store/selectors/wallpapersSelector';
+import { addWallpapersData } from '@/store/slices/wallpaperSlice';
 
 const HomeScreen = () => {
-  const [search, setSearch] = useState<string>('');
-  const searchInputRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchInputValue, setSearchInputValue] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<string>('');
+  const searchInputRef = useRef(null);
 
+  const dispatchWallpapers = useAppDispatch();
+  // getting wallpapers from redux store
+  const wallpaperData = useAppSelector(useWallpaperData);
+
+  // calling this function on category click
   const handleCategoryClick = (category: string) => {
     setActiveCategory(category);
   };
 
-  console.log('active category: ', activeCategory);
+  const {
+    data: searchedWallpapers,
+    isLoading: isSearchedWallpaperLoading,
+    isFetching: isSearchedWallpaperFetching,
+    isSuccess: isSearchedWallpaperSuccess,
+    isError: isSearchedWallpaperError,
+    error: searchedWallpaperError,
+  } = wallpapersApi.useSearchWallpaperQuery(searchTerm, {
+    skip: !searchTerm || searchTerm.replace(/ /g, '') === '',
+  });
+
+  if (isSearchedWallpaperSuccess) {
+    dispatchWallpapers(addWallpapersData(searchedWallpapers!));
+  }
+
+  // this debounce is called when user stop typing in search input
+  const setSearchDebounce = debounce((searchQuery: string) => {
+    setSearchTerm(searchQuery);
+  }, 500);
+
+  // when user type something in search input
+  const setSearchQuery = useCallback((search: string) => {
+    setSearchInputValue(search);
+    setSearchDebounce(search);
+  }, []);
 
   return (
     <View style={[styles.container, { paddingTop: getPaddingTop(30) }]}>
@@ -41,7 +79,7 @@ const HomeScreen = () => {
       </View>
 
       {/* content section */}
-      <ScrollView contentContainerStyle={{ gap: 15 }}>
+      <ScrollView contentContainerStyle={{ gap: 16, flexGrow: 1 }}>
         {/* search bar */}
         <View style={styles.searchBar}>
           <View style={styles.searchIcon}>
@@ -55,11 +93,14 @@ const HomeScreen = () => {
             style={styles.searchInput}
             placeholder='Search for photos...'
             ref={searchInputRef}
-            value={search}
-            onChangeText={(value) => setSearch(value)}
+            value={searchInputValue}
+            onChangeText={(value) => setSearchQuery(value)}
           />
-          {search && (
-            <Pressable style={styles.closeIcon} onPress={() => setSearch('')}>
+          {searchInputValue && (
+            <Pressable
+              style={styles.closeIcon}
+              onPress={() => setSearchQuery('')}
+            >
               <Ionicons
                 name='close'
                 size={22}
@@ -76,6 +117,18 @@ const HomeScreen = () => {
             handleCategoryClick={handleCategoryClick}
           />
         </View>
+
+        {/* images masonry grid */}
+        {isSearchedWallpaperLoading || isSearchedWallpaperFetching ? (
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <ActivityIndicator
+              size={'large'}
+              color={theme.colors.neutral(0.9)}
+            />
+          </View>
+        ) : (
+          <ImageGrid data={wallpaperData.hits} />
+        )}
       </ScrollView>
     </View>
   );

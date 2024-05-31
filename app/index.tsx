@@ -1,13 +1,58 @@
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Pressable,
+  ToastAndroid,
+  Alert,
+} from 'react-native';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { hp, wp } from '@/helpers/common';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { theme } from '@/constants/theme';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import { useAppDispatch } from '@/hooks/ReduxHooks';
+import { wallpapersApi } from '@/store/apis/wallpaperApis';
+import { addWallpapersData } from '@/store/slices/wallpaperSlice';
+import ToastNew from 'react-native-toast-message';
 
 const Page = () => {
+  const router = useRouter();
+  const dispatchWallpapers = useAppDispatch();
+  const {
+    data: wallpapersData,
+    isLoading: isWallpaperLoading,
+    isFetching: isWallpaperFetching,
+    isSuccess: isWallpaperSuccess,
+    isError: isWallpaperError,
+  } = wallpapersApi.useGetAllWallpapersQuery(1);
+
+  const renderToastError = (title: string) => {
+    console.log('toast: ', title);
+
+    return ToastNew.show({
+      type: 'error',
+      position: 'bottom',
+      swipeable: true,
+      visibilityTime: 4000,
+      text1: title,
+    });
+  };
+
+  const getAllWallpapers = () => {
+    // renderToastError('testing error toast');
+    // Alert.alert('Testing', 'This is a testing prompt');
+    if (isWallpaperLoading || isWallpaperFetching) {
+    }
+    if (isWallpaperSuccess) {
+      dispatchWallpapers(addWallpapersData(wallpapersData));
+      router.push('/home/');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style='light' />
@@ -45,11 +90,14 @@ const Page = () => {
               Every pixel tells a story
             </Animated.Text>
             <Animated.View entering={FadeInDown.delay(600).springify()}>
-              <Link href={'/home/'} asChild>
-                <Pressable style={styles.startButton}>
-                  <Text style={styles.startButtonText}>Start Exploring</Text>
-                </Pressable>
-              </Link>
+              {/* <Link href={'/home/'} asChild> */}
+              <Pressable
+                style={styles.startButton}
+                onPress={() => getAllWallpapers()}
+              >
+                <Text style={styles.startButtonText}>Start Exploring</Text>
+              </Pressable>
+              {/* </Link> */}
             </Animated.View>
           </View>
         </LinearGradient>

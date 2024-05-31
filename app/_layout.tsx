@@ -3,6 +3,8 @@ import React, { useEffect } from 'react';
 import { SplashScreen, Stack } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
+import { Provider } from 'react-redux';
+import store from '@/store/store';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,7 +58,11 @@ const InitialLayout = () => {
 };
 
 const RootLayoutNav = () => {
-  return <InitialLayout />;
+  return (
+    <Provider store={store}>
+      <InitialLayout />
+    </Provider>
+  );
 };
 
 export default RootLayoutNav;

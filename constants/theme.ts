@@ -3,6 +3,12 @@ export const theme = {
     white: '#fff',
     black: '#000',
     grayBg: '#e5e5e5',
+    primary: '#3D38ED',
+    primaryMuted: '#C9C8FA',
+    background: '#F5F5F5',
+    dark: '#141518',
+    gray: '#626D77',
+    lightGray: '#D8DCE2',
     neutral: (opacity: any) => `rgba(10, 10, 10, ${opacity})`,
   },
   fontWeights: {
