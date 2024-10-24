@@ -2,7 +2,7 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import React from 'react';
 import { categories } from '@/constants/Data';
 import CategoryItem from './CategoryItem';
-import { wp } from '@/helpers/common';
+import { wp } from '@/utils/helpers/design';
 
 interface ICategoriesProps {
   activeCategory: string;

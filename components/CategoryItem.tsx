@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import { theme } from '@/constants/theme';
-import { hp, wp } from '@/helpers/common';
 import Animated, { FadeInRight } from 'react-native-reanimated';
+import { hp } from '@/utils/helpers/design';
 
 interface ICategoryItemProps {
   title: string;

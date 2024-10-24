@@ -1,15 +1,6 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Pressable,
-  ToastAndroid,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, Alert } from 'react-native';
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { hp, wp } from '@/helpers/common';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { theme } from '@/constants/theme';
@@ -18,6 +9,7 @@ import { useAppDispatch } from '@/hooks/ReduxHooks';
 import { wallpapersApi } from '@/store/apis/wallpaperApis';
 import { addWallpapersData } from '@/store/slices/wallpaperSlice';
 import ToastNew from 'react-native-toast-message';
+import { hp, wp } from '@/utils/helpers/design';
 
 const Page = () => {
   const router = useRouter();
@@ -30,22 +22,10 @@ const Page = () => {
     isError: isWallpaperError,
   } = wallpapersApi.useGetAllWallpapersQuery(1);
 
-  const renderToastError = (title: string) => {
-    console.log('toast: ', title);
-
-    return ToastNew.show({
-      type: 'error',
-      position: 'bottom',
-      swipeable: true,
-      visibilityTime: 4000,
-      text1: title,
-    });
-  };
-
   const getAllWallpapers = () => {
     // renderToastError('testing error toast');
-    // Alert.alert('Testing', 'This is a testing prompt');
     if (isWallpaperLoading || isWallpaperFetching) {
+      Alert.alert('Please wait, we are fetching the best wallpapers for you');
     }
     if (isWallpaperSuccess) {
       dispatchWallpapers(addWallpapersData(wallpapersData));

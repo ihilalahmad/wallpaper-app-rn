@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import React from 'react';
 import { MasonryFlashList } from '@shopify/flash-list';
-import { getColumnCount, hp, wp } from '@/helpers/common';
+import { getColumnCount, hp, wp } from '@/utils/helpers/design';
 import ImageCard from './ImageCard';
 import { WallpaperType } from '@/types/WallpaperTypes';
 import { theme } from '@/constants/theme';

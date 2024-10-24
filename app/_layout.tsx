@@ -5,6 +5,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { Provider } from 'react-redux';
 import store from '@/store/store';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '@/utils/helpers/toast';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,6 +63,7 @@ const RootLayoutNav = () => {
   return (
     <Provider store={store}>
       <InitialLayout />
+      <Toast config={toastConfig} />
     </Provider>
   );
 };

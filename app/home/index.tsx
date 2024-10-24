@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
-import { getPaddingTop, hp, wp } from '@/helpers/common';
+import { getPaddingTop, hp, wp } from '@/utils/helpers/design';
 import Categories from '@/components/Categories';
 import { apiCall } from '@/api';
 import ImageGrid from '@/components/ImageGrid';
@@ -37,12 +37,23 @@ const HomeScreen = () => {
   };
 
   const {
+    data: categoryWallpapers,
+    isLoading: categoryWallpapersLoading,
+    isFetching: categoryWallpapersFetching,
+    isSuccess: categoryWallpapersSuccess,
+  } = wallpapersApi.useGetCategoryWallpaperQuery(activeCategory, {
+    skip: !activeCategory || activeCategory.replace(/ /g, '') === '',
+  });
+
+  if (categoryWallpapersSuccess) {
+    dispatchWallpapers(addWallpapersData(categoryWallpapers!));
+  }
+
+  const {
     data: searchedWallpapers,
     isLoading: isSearchedWallpaperLoading,
     isFetching: isSearchedWallpaperFetching,
     isSuccess: isSearchedWallpaperSuccess,
-    isError: isSearchedWallpaperError,
-    error: searchedWallpaperError,
   } = wallpapersApi.useSearchWallpaperQuery(searchTerm, {
     skip: !searchTerm || searchTerm.replace(/ /g, '') === '',
   });
@@ -119,7 +130,10 @@ const HomeScreen = () => {
         </View>
 
         {/* images masonry grid */}
-        {isSearchedWallpaperLoading || isSearchedWallpaperFetching ? (
+        {isSearchedWallpaperLoading ||
+        isSearchedWallpaperFetching ||
+        categoryWallpapersLoading ||
+        categoryWallpapersFetching ? (
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <ActivityIndicator
               size={'large'}

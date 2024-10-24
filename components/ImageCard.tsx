@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import { WallpaperType } from '@/types/WallpaperTypes';
-import { getImageHeight, hp, isLastInRow, wp } from '@/helpers/common';
+import { getImageHeight, hp, isLastInRow, wp } from '@/utils/helpers/design';
 import { Image } from 'expo-image';
 import { theme } from '@/constants/theme';
 

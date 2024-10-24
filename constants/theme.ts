@@ -9,6 +9,7 @@ export const theme = {
     dark: '#141518',
     gray: '#626D77',
     lightGray: '#D8DCE2',
+    backgroundDarkGray: '#20201F',
     neutral: (opacity: any) => `rgba(10, 10, 10, ${opacity})`,
   },
   fontWeights: {
